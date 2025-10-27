@@ -27,13 +27,14 @@ var config = {
         port: process.env.PORT || 3000,
         ambiente: process.env.NODE_ENV || 'DEV',
         database: {
-            host: process.env.DB_HOST || '127.0.0.1',
-            port: process.env.DB_PORT || 3306,
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || '55652013',
-            database: process.env.DB_NAME || 'pizzaria',
-            timezone: process.env.DB_TIMEZONE || '-03:00' // ou 'Z' se preferir UTC
-        }
+        host: process.env.MYSQLHOST || 'mysql.railway.internal',
+        port: process.env.MYSQLPORT || 3306,
+        user: process.env.MYSQLUSER || 'root',
+        password: process.env.MYSQLPASSWORD,
+        database: process.env.MYSQLDATABASE || 'pizzaria',
+        timezone: process.env.DBTIMEZONE || '-03:00',
+      }
+
     }
 };
 

@@ -1,73 +1,43 @@
-var mysql = require('mysql2');
+const mysql = require('mysql2/promise');
+// O pool é criado uma vez, usando as configs do global.config (veja config.js para garantir as variáveis de ambiente certas)
+const pool = mysql.createPool(global.config.database);
 
 module.exports = class AcessoDados {
-
     async Query(SqlQuery, parametros) {
-
         try {
+            let SqlQueryUp = SqlQuery;
 
-            var SqlQueryUp = SqlQuery;
-            var retorno;
-            var connection = mysql.createConnection(global.config.database);
-
-            // percorre os parametros
+            // Percorre e substitui os parâmetros na query
             if (parametros && parametros != undefined) {
                 let p = parametros;
-
                 for (let key in p) {
-
                     if (p.hasOwnProperty(key)) {
-
                         let campo = key;
                         let valor = p[key];
-
-                        // valida se é para forçar o tipo para String (str)
                         if (campo.indexOf('str') != 0) {
-
-                            // valida se é número
                             if (valor != '' && !isNaN(valor)) {
-                                // valida se é float ou int
                                 if (!Number.isInteger(parseFloat(valor))) // float
                                     SqlQueryUp = SqlQueryUp.replace('@' + campo, valor);
                                 else // int
                                     SqlQueryUp = SqlQueryUp.replace('@' + campo, valor);
-                            }
-                             // valida se é data (yyyy-MM-dd)
-                            else if (valor != '' && valor.split('-').length == 3 && valor.length == 10) //date
-                                    SqlQueryUp = SqlQueryUp.replace('@' + campo, `'${valor}'`);
-
+                            } else if (valor != '' && valor.split('-').length == 3 && valor.length == 10) // date
+                                SqlQueryUp = SqlQueryUp.replace('@' + campo, `'${valor}'`);
                             else {
                                 SqlQueryUp = SqlQueryUp.replace('@' + campo, `'${valor}'`);
                             }
-
-                        }
-                        else {
+                        } else {
                             SqlQueryUp = SqlQueryUp.replace('@' + campo, `'${valor}'`);
                         }
-
                     }
                 }
             }
 
-            connection.connect();
-
-            await new Promise((resolve, reject) => {
-
-                connection.query(SqlQueryUp, function (error, results, fields) {
-                    if (error) { reject(); throw error }    
-                    retorno = results
-                    resolve()
-                });
-
-            })
-            
-            connection.end();
-            return retorno;
-
+            // Executa a query usando pool (safe/melhor para produção)
+            const [rows] = await pool.query(SqlQueryUp);
+            return rows;
         } catch (error) {
             console.log('error', error)
             return error;
         }
     }
-
 }

@@ -30,6 +30,12 @@ cardapio.method = {
                     return;
                 }
 
+                if (response.data && response.data.length > 0) {
+  document.querySelector("#lblNomeEmpresa").innerText = response.data[0].nome;
+} else {
+  document.querySelector("#lblNomeEmpresa").innerText = "Dados não encontrados";
+}
+
                 document.querySelector("#lblNomeEmpresa").innerText = response.data[0].nome;
 
                 if (response.data[0].logotipo != null) {

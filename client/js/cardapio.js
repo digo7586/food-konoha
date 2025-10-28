@@ -36,7 +36,7 @@ cardapio.method = {
   document.querySelector("#lblNomeEmpresa").innerText = "Dados não encontrados";
 }
 
-                document.querySelector("#lblNomeEmpresa").innerText = response.data[0].nome;
+    
 
                 if (response.data[0].logotipo != null) {
                     document.querySelector("#imgLogoEmpresa").style.backgroundImage = `url('/public/images/empresa/${response.data[0].logotipo}')`;

@@ -10,7 +10,7 @@
     "restify": "^11.0.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": "16.x"

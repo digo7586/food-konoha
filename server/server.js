@@ -50,3 +50,4 @@ server.on('restifyError', function(req, res, err, callback) {
 });
 
 module.exports = Object.assign({ server, restify, config })
+
